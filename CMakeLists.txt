@@ -3,4 +3,4 @@ project(PJ1)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(PJ1 main.cpp)
+add_executable(PJ1 main.cpp priorityList.h priorityList.cpp)
