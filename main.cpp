@@ -76,16 +76,15 @@ Node *PriorityQueue::enqueue(int val) {
         return this->head;
     }
     while(p->getNext()){
-        cout<<"79 "<<val<<endl;
         if(p->getValue()<val){
-            cout<<"81 "<<val<<endl;
             Node* tmp = new Node();
             tmp->setValue(val);
             tmp->setNext(p);
             tmp->setPrev(p->getPrev());
-            p->getPrev()->setNext(tmp);
+            if(p->getPrev()){
+                p->getPrev()->setNext(tmp);
+            }
             p->setPrev(tmp);
-            cout<<"87 "<<tmp->getNext()<<"  "<<tmp->getPrev()<<endl;
             if(val>head->getValue()){
                 head=tmp;
             }
@@ -128,9 +127,10 @@ void PriorityQueue::writeAll() {
 
 
     while(p!= nullptr){
-        cout<<"134 "<<p->getValue()<<endl;
+        cout<<"writeAll: "<<p->getValue()<<endl;
         p=p->getNext();
     }
+    cout<<endl;
 
 }
 
@@ -142,15 +142,16 @@ int main() {
     que->enqueue(21);
     que->enqueue(17);
     que->enqueue(73);
+    que->writeAll();
+    cout<<"dequeue: "<<que->dequeue()<<endl;
+    que->writeAll();
+    que->enqueue(37);
+    que->enqueue(73);
     que->enqueue(53);
     que->writeAll();
-    //std::cout<<que->dequeue()<<std::endl;
-    //que->enqueue(17);
-    //que->enqueue(73);
-    //que->enqueue(53);
-    //int kurac = 21;
-    //que->removeMember(&kurac);
-    //que->writeAll();
+    int num = 21;
+    que->removeMember(&num);
+    que->writeAll();
 
 
 
