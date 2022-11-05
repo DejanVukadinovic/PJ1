@@ -26,16 +26,22 @@ class Node {
         void setValue(int val){
             this->value = val;
         };
-        Node(int val, Node* previous);
         Node();
-};
+        Node(int val);
+        Node(int val, Node* previous);
 
+};
+Node::Node() {
+}
+Node::Node(int val) {
+    this->setValue(val);
+}
 Node::Node(int val, Node* previous) {
     this->setValue(val);
-    this->next = previous->next;
+    if (previous){
+        this->next = previous->next;
+    }
     this->prev = previous;
-}
-Node::Node() {
 }
 
 class PriorityQueue {
@@ -53,15 +59,12 @@ Node *PriorityQueue::enqueue(int val) {
     Node* p = this->head;
 
     if(p== nullptr){
-        this->head = new Node();
-        this->head->setValue(val);
-        this->head->setPrev(nullptr);
+        this->head = new Node(val, nullptr);
         this->head->setNext(nullptr);
         this->tail = this->head;
         return this->head;
     }else if(p->getNext()== nullptr){
-        Node* temp = new Node;
-        temp->setValue(val);
+        Node* temp = new Node(val);
         if(val>this->head->getValue()){
             head->setPrev(temp);
             temp->setNext(head);
@@ -77,10 +80,8 @@ Node *PriorityQueue::enqueue(int val) {
     }
     while(p->getNext()){
         if(p->getValue()<val){
-            Node* tmp = new Node();
-            tmp->setValue(val);
+            Node* tmp = new Node(val, p->getPrev());
             tmp->setNext(p);
-            tmp->setPrev(p->getPrev());
             if(p->getPrev()){
                 p->getPrev()->setNext(tmp);
             }
@@ -89,11 +90,9 @@ Node *PriorityQueue::enqueue(int val) {
                 head=tmp;
             }
             return tmp;
-
         }
         p = p->getNext();
     }
-
     tail = new Node(val, p);
     return tail;
 }
@@ -124,8 +123,6 @@ bool PriorityQueue::removeMember(int *val) {
 
 void PriorityQueue::writeAll() {
     Node *p = this->head;
-
-
     while(p!= nullptr){
         cout<<"writeAll: "<<p->getValue()<<endl;
         p=p->getNext();
