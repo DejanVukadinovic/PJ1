@@ -8,7 +8,6 @@ private:
     int value;
     Node* prev = nullptr;
     Node* next = nullptr;
-public:
     Node* getPrev(){
         return this->prev;
     };
@@ -30,6 +29,7 @@ public:
     Node();
     Node(int val);
     Node(int val, Node* previous);
+    friend class PriorityQueue;
 
 };
 
