@@ -1,33 +1,33 @@
 #include <iostream>
+#include "string.h"
 #include "priorityList.h"
+#include "Matrix.h"
+#include "Operation.h"
 
 using namespace std;
 
 
-Node::Node() {
+Node::Node(Operation content) : content(content) {
 }
-Node::Node(int val) {
-    this->setValue(val);
+Node::Node(Operation cont, int val) : value(val), content(cont) {
 }
-Node::Node(int val, Node* previous) {
-    this->setValue(val);
+Node::Node(Operation cont, int val, Node* previous) : value(val), content(cont) {
     if (previous){
         this->next = previous->next;
     }
     this->prev = previous;
 }
 
-
-Node *PriorityQueue::enqueue(int val) {
+Node *PriorityQueue::enqueue(int val, Operation content) {
     Node* p = this->head;
 
     if(p== nullptr){
-        this->head = new Node(val, nullptr);
+        this->head = new Node(content, val, nullptr);
         this->head->setNext(nullptr);
         this->tail = this->head;
         return this->head;
     }else if(p->getNext()== nullptr){
-        Node* temp = new Node(val);
+        Node* temp = new Node(content, val);
         if(val>this->head->getValue()){
             head->setPrev(temp);
             temp->setNext(head);
@@ -43,7 +43,7 @@ Node *PriorityQueue::enqueue(int val) {
     }
     while(p->getNext()){
         if(p->getValue()<val){
-            Node* tmp = new Node(val, p->getPrev());
+            Node* tmp = new Node(content, val, p->getPrev());
             tmp->setNext(p);
             if(p->getPrev()){
                 p->getPrev()->setNext(tmp);
@@ -56,16 +56,26 @@ Node *PriorityQueue::enqueue(int val) {
         }
         p = p->getNext();
     }
-    tail = new Node(val, p);
+    tail = new Node(content, val, p);
+    p->setNext(tail);
     return tail;
 }
 
-int PriorityQueue::dequeue() {
-    int val = this->head->getValue();
-    this->head = this->head->getNext();
-    delete this->head->getPrev();
-    this->head->setPrev(nullptr);
-    return val;
+Operation PriorityQueue::dequeue() {
+
+
+    if (this->head){
+        Operation cont = this->head->getContent();
+        this->head = this->head->getNext();
+        if(this->head){
+            delete this->head->getPrev();
+            this->head->setPrev(nullptr);
+        }
+        return cont;
+    }
+    Operation newOperation;
+    return newOperation;
+
 }
 
 bool PriorityQueue::removeMember(int *val) {
@@ -83,14 +93,3 @@ bool PriorityQueue::removeMember(int *val) {
     return false;
 
 }
-
-void PriorityQueue::writeAll() {
-    Node *p = this->head;
-    while(p!= nullptr){
-        cout<<"writeAll: "<<p->getValue()<<endl;
-        p=p->getNext();
-    }
-    cout<<endl;
-
-}
-
